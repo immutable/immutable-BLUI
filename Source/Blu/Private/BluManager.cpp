@@ -14,7 +14,7 @@ void BluManager::OnBeforeCommandLineProcessing(const CefString& process_type,
 	* If set to "true": CEF will use less CPU, but rendering performance will be lower. CSS3 and WebGL are not be usable
 	* If set to "false": CEF will use more CPU, but rendering will be better, CSS3 and WebGL will also be usable
 	*/
-	BluManager::CPURenderSettings = false;
+	BluManager::CPURenderSettings = true;
 	/////////////////
 
 	CommandLine->AppendSwitch("off-screen-rendering-enabled");
@@ -25,6 +25,7 @@ void BluManager::OnBeforeCommandLineProcessing(const CefString& process_type,
 	// Should we use the render settings that use less CPU?
 	if (CPURenderSettings)
 	{
+		CommandLine->AppendSwitch("disable-software-rasterizer");
 		CommandLine->AppendSwitch("disable-gpu");
 		CommandLine->AppendSwitch("disable-gpu-compositing");
 		CommandLine->AppendSwitch("enable-begin-frame-scheduling");

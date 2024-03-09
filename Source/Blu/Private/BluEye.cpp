@@ -12,7 +12,7 @@ FBluEyeSettings::FBluEyeSettings()
 	Height = 720;
 
 	bIsTransparent = false;
-	bEnableWebGL = true;
+	bEnableWebGL = false;
 	bAudioMuted = false;
 	bAutoPlayEnabled = true;
 }
@@ -773,16 +773,9 @@ void UBluEye::BeginDestroy()
 {
 	if (Browser)
 	{
-		// Close up the browser
-		Browser->GetHost()->SetAudioMuted(true);
-		Browser->GetMainFrame()->LoadURL("about:blank");
-		//browser->GetMainFrame()->Delete();
-		Browser->GetHost()->CloseDevTools();
-		Browser->GetHost()->CloseBrowser(true);
+		Browser->GetHost()->TryCloseBrowser();
 		Browser = nullptr;
-
-
-		UE_LOG(LogBlu, Warning, TEXT("Browser Closing"));
+		UE_LOG(LogBlu, Log, TEXT("Browser Closing"));
 	}
 
 	DestroyTexture();

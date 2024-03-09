@@ -40,7 +40,6 @@ class BrowserClient : public CefClient, public CefLifeSpanHandler, public CefDow
 		// For lifespan
 		CefRefPtr<CefBrowser> BrowserRef;
 		int BrowserId;
-		bool bIsClosing;
 
 	public:
 		BrowserClient(RenderHandler* InRenderHandler) : RenderHandlerRef(InRenderHandler)

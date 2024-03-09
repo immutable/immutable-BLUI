@@ -9,12 +9,14 @@ class FBlu : public IBlu
 	{
 		CefString GameDirCef = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "BluCache");
 		FString ExecutablePath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Plugins/BLUI/ThirdParty/cef/");
+		CefString CefLogPath = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Saved/Logs/blui_cef.log");
 
 		// Setup the default settings for BluManager
 		BluManager::Settings.windowless_rendering_enabled = true;
 		BluManager::Settings.no_sandbox = true;
-		//BluManager::Settings.remote_debugging_port = 7777;
 		BluManager::Settings.uncaught_exception_stack_size = 5;
+		BluManager::Settings.multi_threaded_message_loop = false;
+		BluManager::Settings.log_severity = LOGSEVERITY_ERROR;
 
 	#if PLATFORM_LINUX
 		ExecutablePath = "./blu_ue4_process";
@@ -30,9 +32,10 @@ class FBlu : public IBlu
 
 		// Set the sub-process path
 		CefString(&BluManager::Settings.browser_subprocess_path).FromString(realExePath);
-
 		// Set the cache path
 		CefString(&BluManager::Settings.cache_path).FromString(GameDirCef);
+		// Cef logs
+		CefString(&BluManager::Settings.log_file).FromString(CefLogPath);
 
 		// Make a new manager instance
 		CefRefPtr<BluManager> BluApp = new BluManager();
@@ -46,7 +49,7 @@ class FBlu : public IBlu
 	virtual void ShutdownModule() override
 	{
 		UE_LOG(LogBlu, Log, TEXT(" STATUS: Shutdown"));
-		//CefShutdown();
+		CefShutdown();
 	}
 
 };
