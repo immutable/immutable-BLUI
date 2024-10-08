@@ -26,7 +26,7 @@ public:
 
 	/** Initialize function, should be called after properties are set */
 	UFUNCTION(BlueprintCallable, Category = "Blu")
-	void Init();
+	bool Init();
 
 	/** The default URL this UI component will load */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Blu")

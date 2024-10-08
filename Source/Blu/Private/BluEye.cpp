@@ -24,7 +24,7 @@ UBluEye::UBluEye(const class FObjectInitializer& PCIP)
 	bValidTexture = false;
 }
 
-void UBluEye::Init()
+bool UBluEye::Init()
 {
 
 	/** 
@@ -37,14 +37,14 @@ void UBluEye::Init()
 		if (GEngine->IsEditor() && !GWorld->IsPlayInEditor())
 		{
 			UE_LOG(LogBlu, Log, TEXT("Notice: not playing - Component Will Not Initialize"));
-			return;
+			return false;
 		}
 	}
 	
 	if (Settings.Width <= 0 || Settings.Height <= 0)
 	{
 		UE_LOG(LogBlu, Log, TEXT("Can't initialize when Width or Height are <= 0"));
-		return;
+		return false;
 	}
 	
 	uint16 DebugPort;
@@ -88,6 +88,12 @@ void UBluEye::Init()
 		NULL,
 		NULL);
 
+	if (!Browser)
+	{
+		UE_LOG(LogBlu, Log, TEXT("Failed to create Blu browser!"));
+
+		return false;
+	}
 
 	Browser->GetHost()->SetWindowlessFrameRate(Settings.FrameRate);
 	Browser->GetHost()->SetAudioMuted(Settings.bAudioMuted);
@@ -106,6 +112,8 @@ void UBluEye::Init()
 
 	//Instead of manually ticking, we now tick whenever one blu eye is created
 	SpawnTickEventLoopIfNeeded();
+
+	return true;
 }
 
 void UBluEye::ResetTexture()
