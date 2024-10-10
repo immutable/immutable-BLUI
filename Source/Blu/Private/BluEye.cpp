@@ -131,7 +131,11 @@ void UBluEye::ResetTexture()
 	Texture->AddToRoot();
 	Texture->UpdateResource();
 
+#if ENGINE_MAJOR_VERSION < 5
 	RenderParams.Texture2DResource = (FTexture2DResource*)Texture->Resource;
+#else
+	RenderParams.Texture2DResource = (FTexture2DResource*)Texture->GetResource();
+#endif
 
 	ResetMatInstance();
 
@@ -145,13 +149,21 @@ void UBluEye::DestroyTexture()
 	{
 		Texture->RemoveFromRoot();
 
-		if (Texture->Resource)
+#if ENGINE_MAJOR_VERSION < 5
+		if (FTextureResource* Resource = Texture->Resource)
+#else
+		if (FTextureResource* Resource = Texture->GetResource())
+#endif
 		{
-			BeginReleaseResource(Texture->Resource);
+			BeginReleaseResource(Resource);
 			FlushRenderingCommands();
 		}
 
+#if ENGINE_MAJOR_VERSION < 5
 		Texture->MarkPendingKill();
+#else
+		Texture->MarkAsGarbage();
+#endif
 		Texture = nullptr;
 		bValidTexture = false;
 	}
@@ -175,7 +187,11 @@ void UBluEye::TextureUpdate(const void *buffer, FUpdateTextureRegion2D *updateRe
 		}
 	 
 		FUpdateTextureRegionsData* RegionData = new FUpdateTextureRegionsData;
+#if ENGINE_MAJOR_VERSION < 5
 		RegionData->Texture2DResource = (FTextureResource*)Texture->Resource;
+#else
+		RegionData->Texture2DResource = (FTextureResource*)Texture->GetResource();
+#endif
 		RegionData->NumRegions = regionCount;
 		RegionData->SrcBpp = 4;
 		RegionData->SrcPitch = Settings.Width * 4;
@@ -711,16 +727,22 @@ void UBluEye::SpawnTickEventLoopIfNeeded()
 {
 	if (!EventLoopData.DelegateHandle.IsValid())
 	{
-		EventLoopData.DelegateHandle = FTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([](float DeltaTime)
+		FTickerDelegate TickDelegate = FTickerDelegate::CreateLambda([](float DeltaTime)
 		{
 			if (EventLoopData.bShouldTickEventLoop)
 			{
 				//UE_LOG(LogTemp, Log, TEXT("Delta: %1.2f"), DeltaTime);
 				BluManager::DoBluMessageLoop();
 			}
-			
+
 			return true;
-		}));
+		});
+
+#if ENGINE_MAJOR_VERSION < 5
+		EventLoopData.DelegateHandle = FTicker::GetCoreTicker().AddTicker(TickDelegate);
+#else
+		EventLoopData.DelegateHandle = FTSTicker::GetCoreTicker().AddTicker(TickDelegate);
+#endif
 	}
 
 	EventLoopData.EyeCount++;
@@ -793,8 +815,12 @@ void UBluEye::BeginDestroy()
 	EventLoopData.EyeCount--;
 	if (EventLoopData.EyeCount <= 0)
 	{
+#if ENGINE_MAJOR_VERSION < 5
 		FTicker::GetCoreTicker().RemoveTicker(EventLoopData.DelegateHandle);
-		EventLoopData.DelegateHandle = FDelegateHandle();
+#else
+		FTSTicker::GetCoreTicker().RemoveTicker(EventLoopData.DelegateHandle);
+#endif
+		EventLoopData.DelegateHandle.Reset();
 	}
 	Super::BeginDestroy();
 }

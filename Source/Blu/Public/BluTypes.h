@@ -1,17 +1,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Containers/Ticker.h"
 #include "BluTypes.generated.h"
 
 struct FTickEventLoopData
 {
+#if ENGINE_MAJOR_VERSION < 5
 	FDelegateHandle DelegateHandle;
+#else
+	FTSTicker::FDelegateHandle DelegateHandle;
+#endif
 	int32 EyeCount;
 	bool bShouldTickEventLoop;
 
 	FTickEventLoopData()
 	{
-		DelegateHandle = FDelegateHandle();
 		EyeCount = 0;
 		bShouldTickEventLoop = true;
 	}
