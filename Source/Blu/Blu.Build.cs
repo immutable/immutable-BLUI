@@ -32,7 +32,8 @@ public class Blu : ModuleRules
 				"Slate",
 				"SlateCore",
 				"UMG",
-				"Json"
+				"Json",
+				"Projects"
 			});
 
 		PrivateIncludePaths.AddRange(
