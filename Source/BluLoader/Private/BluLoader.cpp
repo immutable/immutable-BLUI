@@ -3,6 +3,8 @@
 #include "Misc/Paths.h"
 #include <string>
 
+#include "Interfaces/IPluginManager.h"
+
 #if PLATFORM_WINDOWS
 #include "Windows/WindowsPlatformProcess.h"
 #endif
@@ -13,7 +15,7 @@ class FBluLoader : public IBluLoader
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override
 	{
-		FString LibPath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Plugins/BLUI/ThirdParty/cef/");
+		FString LibPath = FPaths::Combine(IPluginManager::Get().FindPlugin(TEXT("BLUI"))->GetBaseDir(), TEXT("/ThirdParty/cef/"));
 
 		// If we're on Windows we need to load DLLs from our custom path
 		#if PLATFORM_WINDOWS

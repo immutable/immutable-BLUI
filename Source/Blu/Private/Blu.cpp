@@ -1,5 +1,6 @@
 #include "IBlu.h"
 #include "BluManager.h"
+#include "Interfaces/IPluginManager.h"
 
 class FBlu : public IBlu
 {
@@ -8,7 +9,7 @@ class FBlu : public IBlu
 	virtual void StartupModule() override
 	{
 		CefString GameDirCef = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "BluCache");
-		FString ExecutablePath = FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Plugins/BLUI/ThirdParty/cef/");
+		FString ExecutablePath = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("BLUI"))->GetBaseDir() + "/ThirdParty/cef/");
 		CefString CefLogPath = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Saved/Logs/blui_cef.log");
 
 		// Setup the default settings for BluManager

@@ -11,7 +11,8 @@ public class BluLoader : ModuleRules
 		{
 			"Core",
 			"CoreUObject",
-			"Engine"
+			"Engine",
+			"Projects"
 		});
 	}
 }

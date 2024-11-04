@@ -1,5 +1,6 @@
 #include "RenderHandler.h"
 #include "BluEye.h"
+#include "Interfaces/IPluginManager.h"
 
 RenderHandler::RenderHandler(int32 Width, int32 Height, UBluEye* UI)
 {
@@ -122,7 +123,7 @@ FString ReversePathSlashes(FString ForwardPath)
 }
 FString UtilityBLUIDownloadsFolder()
 {
-	return ReversePathSlashes(FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Plugins/BLUI/Downloads/"));
+	return ReversePathSlashes(FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("BLUI"))->GetBaseDir() + "/Downloads/"));
 }
 
 
