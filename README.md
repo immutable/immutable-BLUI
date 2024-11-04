@@ -6,15 +6,19 @@ Credit for the original code belongs to the authors of the BLUI repository.
 
 # Installation
 
-### Prerequisites
+## Prerequisites
 - [git-lfs](https://git-lfs.com/)
 - Unreal Engine (4.26, 4.27, or 5.0) installed via the Epic Games Launcher or built from source.
 - Microsoft Visual Studio. Ensure you have a compatible version installed. Refer to the official Unreal Engine documentation for details.
 
-### Clone the Repository
+## Clone the Repository
 
 Open a terminal, navigate to your game's plugin folder, and run the following command:
 
 ```sh
 git clone https://github.com/immutable/immutable-BLUI.git
 ```
+
+## Downloading the Latest Release
+
+If you prefer using release archives instead of cloning the repository, download the release archive and unpack the files into your Unreal Engine project's `Plugins` folder.
