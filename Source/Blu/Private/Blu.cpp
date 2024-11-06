@@ -8,6 +8,10 @@ class FBlu : public IBlu
 	/** IModuleInterface implementation */
 	virtual void StartupModule() override
 	{
+#if ENGINE_MAJOR_VERSION >= 5
+		return;
+#endif
+
 		CefString GameDirCef = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "BluCache");
 		FString ExecutablePath = FPaths::ConvertRelativePathToFull(IPluginManager::Get().FindPlugin(TEXT("BLUI"))->GetBaseDir() + "/ThirdParty/cef/");
 		CefString CefLogPath = *FPaths::ConvertRelativePathToFull(FPaths::ProjectDir() + "Saved/Logs/blui_cef.log");
