@@ -8,7 +8,7 @@
 	"CreatedBy": "Aaron M. Shea, Getnamo, & Contributors",
 	"CreatedByURL": "github.com/aaronShea",
 	"DocsURL": "https://github.com/getnamo/BLUI",
-	"EnabledByDefault" : true,
+	"EnabledByDefault" : false,
 	"CanContainContent": "true",
 	"Modules": 
 	[
