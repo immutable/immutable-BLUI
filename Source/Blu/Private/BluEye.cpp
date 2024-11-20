@@ -32,7 +32,7 @@ bool UBluEye::Init()
 	 * If we don't check this, CEF will spawn infinite processes with widget components
 	 **/
 
-	if (GEngine)
+	if (GEngine && !GUsingNullRHI)
 	{
 		if (GEngine->IsEditor() && !GWorld->IsPlayInEditor())
 		{
@@ -201,6 +201,8 @@ void UBluEye::TextureUpdate(const void *buffer, FUpdateTextureRegion2D *updateRe
 		RegionData->SrcData.SetNumUninitialized(RegionData->SrcPitch * Settings.Height);
 		FPlatformMemory::Memcpy(RegionData->SrcData.GetData(), buffer, RegionData->SrcData.Num());
 
+		if (RegionData->Texture2DResource)
+		{
 		ENQUEUE_RENDER_COMMAND(UpdateBLUICommand)(
 			[RegionData](FRHICommandList& CommandList)
 			{
@@ -214,6 +216,7 @@ void UBluEye::TextureUpdate(const void *buffer, FUpdateTextureRegion2D *updateRe
 				FMemory::Free(RegionData->Regions);
 				delete RegionData;
 			});
+		}
 
 	}
 	else {
