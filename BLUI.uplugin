@@ -23,6 +23,11 @@
 			"Type": "Runtime",
 			"LoadingPhase": "PreDefault",
 			"BlacklistPlatforms": ["Android", "iOS" ]
+		},
+		{
+			"Name": "BluExtension",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
 		}
 	]
 }
