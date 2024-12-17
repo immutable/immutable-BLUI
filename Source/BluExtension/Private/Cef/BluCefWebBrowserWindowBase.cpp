@@ -227,6 +227,11 @@ FBluCefWebBrowserWindowBase::FOnToolTip& FBluCefWebBrowserWindowBase::OnToolTip(
 	return ToolTipEvent;
 }
 
+IBluWebBrowserWindow::FOnUrlChanged& FBluCefWebBrowserWindowBase::OnUrlChanged()
+{
+	return UrlChangedEvent;
+}
+
 FBluCefWebBrowserWindowBase::FOnDragWindow& FBluCefWebBrowserWindowBase::OnDragWindow()
 {
 	return DragWindowDelegate;

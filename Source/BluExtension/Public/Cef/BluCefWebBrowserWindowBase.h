@@ -72,6 +72,7 @@ public:
 	virtual bool CanGoForward() const override;
 
 	virtual FOnToolTip& OnToolTip() override;
+	virtual FOnUrlChanged& OnUrlChanged() override;
 	virtual FOnDragWindow& OnDragWindow() override;
 
 	virtual void SetViewportSize(FIntPoint WindowSize, FIntPoint WindowPos = FIntPoint::NoneValue) override;
@@ -127,6 +128,9 @@ protected:
 
 	/** Delegate for showing or hiding tool tips. */
 	FOnToolTip ToolTipEvent;
+
+	/** Delegate for broadcasting address changes. */
+	FOnUrlChanged UrlChangedEvent;
 
 	/** Delegate that is executed when a drag event is detected in an area of the web page tagged as a drag region. */
 	FOnDragWindow DragWindowDelegate;

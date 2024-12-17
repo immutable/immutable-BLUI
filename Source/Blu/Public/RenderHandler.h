@@ -34,7 +34,7 @@ class BrowserClient : public CefClient, public CefLifeSpanHandler, public CefDow
 	private:
 		FScriptEvent* EventEmitter;
 		FLogEvent* LogEmitter;
-		FUrlChangeEvent* UrlChangeEmitter;
+		FUrlChangeMulticastEvent* UrlChangeEmitter;
 		CefRefPtr<RenderHandler> RenderHandlerRef;
 
 		// For lifespan
@@ -87,7 +87,7 @@ class BrowserClient : public CefClient, public CefLifeSpanHandler, public CefDow
 
 		void SetEventEmitter(FScriptEvent* Emitter);
 		void SetLogEmitter(FLogEvent* Emitter);
-		void SetUrlChangeEmitter(FUrlChangeEvent* Emitter);
+		void SetUrlChangeEmitter(FUrlChangeMulticastEvent* Emitter);
 
 		//CefDownloadHandler
 		virtual void OnBeforeDownload(

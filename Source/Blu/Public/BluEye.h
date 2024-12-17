@@ -140,6 +140,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FUrlChangeEvent UrlChangeEventEmitter;
+	FUrlChangeMulticastEvent UrlChangeMulticastEventEmitter;
 
 	/** Trigger a key down event */
 	UFUNCTION(BlueprintCallable, Category = "Blu")

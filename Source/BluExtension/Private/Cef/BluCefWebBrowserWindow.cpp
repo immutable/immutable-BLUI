@@ -22,6 +22,21 @@ FIntPoint FBluCefWebBrowserWindow::GetViewportSize() const
 
 TSharedPtr<SViewport> FBluCefWebBrowserWindow::CreateWidget()
 {
+	UpdateBrush();
+
+	TSharedRef<SViewport> BrowserWidgetRef =
+		SNew(SViewport)
+		.EnableGammaCorrection(false)
+		[
+			SNew(SImage)
+			.Image(&Brush)
+		];
+
+	return BrowserWidgetRef;
+}
+
+void FBluCefWebBrowserWindow::UpdateBrush()
+{
 	CefRefPtr<CefRenderHandler> CefRenderHandler = InternalCefBrowser->GetHost()->GetClient()->GetRenderHandler();
 
 	if (RenderHandler* BluRenderHandler = static_cast<RenderHandler*>(CefRenderHandler.get()))
@@ -39,16 +54,6 @@ TSharedPtr<SViewport> FBluCefWebBrowserWindow::CreateWidget()
 			}
 		}
 	}
-
-	TSharedRef<SViewport> BrowserWidgetRef =
-		SNew(SViewport)
-		.EnableGammaCorrection(false)
-		[
-			SNew(SImage)
-			.Image(&Brush)
-		];
-
-	return BrowserWidgetRef;
 }
 
 UBluEye* FBluCefWebBrowserWindow::GetBluEye() const

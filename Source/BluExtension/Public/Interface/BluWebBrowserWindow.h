@@ -18,6 +18,9 @@ public:
 	/** A delegate to allow callbacks when a frame url changes. */
 	DECLARE_EVENT_OneParam(IBluWebBrowserWindow, FOnToolTip, FString /* ToolTipText */);
 
+	/** A delegate to allow callbacks when a frame url changes. */
+	DECLARE_EVENT_OneParam(IBluWebBrowserWindow, FOnUrlChanged, FString /* NewUrl */);
+
 	/** A delegate that is invoked when drag is detected in an area specified as a drag region on the web page. */
 	DECLARE_DELEGATE_RetVal_OneParam(bool, FOnDragWindow, const FPointerEvent& /* MouseEvent */)
 
@@ -46,6 +49,7 @@ public:
 	virtual bool CanGoForward() const = 0;
 
 	virtual FOnToolTip& OnToolTip() = 0;
+	virtual FOnUrlChanged& OnUrlChanged() = 0;
 	virtual FOnDragWindow& OnDragWindow() = 0;
 
 	/**
