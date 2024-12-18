@@ -101,7 +101,11 @@ bool UBluEye::Init()
 	// Setup JS event emitter
 	ClientHandler->SetEventEmitter(&ScriptEventEmitter);
 	ClientHandler->SetLogEmitter(&LogEventEmitter);
-	ClientHandler->SetUrlChangeEmitter(&UrlChangeEventEmitter);
+	UrlChangeMulticastEventEmitter.AddWeakLambda(this, [this](const FString& url)
+	{
+		UrlChangeEventEmitter.Broadcast(url);
+	});
+	ClientHandler->SetUrlChangeEmitter(&UrlChangeMulticastEventEmitter);
 
 	UE_LOG(LogBlu, Log, TEXT("Component Initialized"));
 	UE_LOG(LogBlu, Log, TEXT("Loading URL: %s"), *DefaultURL);

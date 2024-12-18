@@ -95,6 +95,7 @@ struct FBluEyeSettings
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FScriptEvent, const FString&, EventName, const FString&, EventMessage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLogEvent, const FString&, LogText);
+DECLARE_MULTICAST_DELEGATE_OneParam(FUrlChangeMulticastEvent, const FString& /* url */);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUrlChangeEvent, const FString&, url);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDownloadCompleteSignature, FString, url);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FDownloadUpdatedSignature, FString, url, float, percentage);

@@ -137,7 +137,7 @@ void BrowserClient::SetLogEmitter(FLogEvent* Emitter)
 	this->LogEmitter = Emitter;
 }
 
-void BrowserClient::SetUrlChangeEmitter(FUrlChangeEvent* Emitter)
+void BrowserClient::SetUrlChangeEmitter(FUrlChangeMulticastEvent* Emitter)
 {
 	this->UrlChangeEmitter = Emitter;
 }

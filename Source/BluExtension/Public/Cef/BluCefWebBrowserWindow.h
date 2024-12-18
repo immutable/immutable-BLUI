@@ -13,6 +13,8 @@ public:
 	virtual TSharedPtr<SViewport> CreateWidget() override;
 	/** IBluWebBrowserWindow: @Interface @End */
 
+	void UpdateBrush();
+
 protected:
 	UBluEye* GetBluEye() const;
 

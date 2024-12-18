@@ -10,10 +10,70 @@
 
 #define LOCTEXT_NAMESPACE "BluWebBrowser"
 
+SBluWebBrowser::~SBluWebBrowser()
+{
+	if (BluEye)
+	{
+		BluEye->RemoveFromRoot();
+	}
+}
+
+void SBluWebBrowser::OnArrangeChildren(const FGeometry& AllottedGeometry, FArrangedChildren& ArrangedChildren) const
+{
+	SCompoundWidget::OnArrangeChildren(AllottedGeometry, ArrangedChildren);
+
+	FVector2D WidgetSize = AllottedGeometry.GetLocalSize();
+
+	if (WidgetSize.X != CachedWidgetSize.X || WidgetSize.Y != CachedWidgetSize.Y)
+	{
+		CachedWidgetSize = WidgetSize;
+
+		if (BrowserWindow && BluEye)
+		{
+			const float DPI = (BrowserWindow->GetParentWindow().IsValid() ? BrowserWindow->GetParentWindow()->GetNativeWindow()->GetDPIScaleFactor() : 1.0f);
+			const float DPIScale = AllottedGeometry.Scale / DPI;
+			FVector2D AbsoluteSize = AllottedGeometry.GetLocalSize() * DPIScale;
+			BluEye->ResizeBrowser(AbsoluteSize.X, AbsoluteSize.Y);
+			BrowserWindow->UpdateBrush();
+		}
+	}
+}
+
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-void SBluWebBrowser::Construct(const FArguments& Args, TSharedPtr<IBluWebBrowserWindow> BrowserWindow)
+void SBluWebBrowser::Construct(const FArguments& Args)
 {
+	OnUrlChanged = Args._OnUrlChanged;
+
+	if (!BluEye)
+	{
+		BluEye = NewObject<UBluEye>();
+
+		BluEye->UrlChangeMulticastEventEmitter.AddLambda([this](const FString& Url)
+		{
+			OnUrlChanged.Execute(FText::FromString(Url));
+		});
+
+		BluEye->AddToRoot();
+
+		BluEye->DefaultURL = Args._InitialURL;
+		BluEye->bEnabled = true;
+
+		if (Args._InitialWidth != INDEX_NONE)
+		{
+			BluEye->Settings.Width = Args._InitialWidth;
+		}
+
+		if (Args._InitialHeight != INDEX_NONE)
+		{
+			BluEye->Settings.Height = Args._InitialHeight;
+		}
+
+		check(BluEye->Init());
+	}
+
+	BrowserWindow = MakeShareable(new FBluCefWebBrowserWindow(BluEye->Browser));
+
 	ChildSlot
 	[
 		SAssignNew(BrowserView, SBluWebBrowserView, BrowserWindow)
@@ -22,41 +82,12 @@ void SBluWebBrowser::Construct(const FArguments& Args, TSharedPtr<IBluWebBrowser
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
-void UBluWebBrowser::ReleaseSlateResources(bool bReleaseChildren)
+void SBluWebBrowser::LoadURL(const FString& URL)
 {
-	Super::ReleaseSlateResources(bReleaseChildren);
-}
-
-void UBluWebBrowser::SynchronizeProperties()
-{
-	Super::SynchronizeProperties();
-}
-
-void UBluWebBrowser::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-
-	BluEye = NewObject<UBluEye>(this);
-
-	BluEye->DefaultURL = InitialURL;
-	BluEye->bEnabled = true;
-
-	if (InitialWidth != INDEX_NONE)
+	if (BluEye)
 	{
-		BluEye->Settings.Width = InitialWidth;
+		BluEye->LoadURL(URL);
 	}
-
-	if (InitialHeight != INDEX_NONE)
-	{
-		BluEye->Settings.Height = InitialHeight;
-	}
-
-	check(BluEye->Init());
-}
-
-UBluEye* UBluWebBrowser::GetBluEye() const
-{
-	return BluEye;
 }
 
 TSharedRef<SWidget> UBluWebBrowser::RebuildWidget()
@@ -73,9 +104,7 @@ TSharedRef<SWidget> UBluWebBrowser::RebuildWidget()
 	}
 	else
 	{
-		TSharedPtr<FBluWebBrowserWindow> BrowserWindow(new FBluWebBrowserWindow(BluEye->Browser));
-
-		S_WebBrowser = SNew(SBluWebBrowser, BrowserWindow);
+		S_WebBrowser = SNew(SBluWebBrowser);
 
 		return S_WebBrowser.ToSharedRef();
 	}
