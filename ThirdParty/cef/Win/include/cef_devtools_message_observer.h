@@ -59,7 +59,7 @@ class CefDevToolsMessageObserver : public virtual CefBaseRefCounted {
   // OnDevToolsEvent methods as appropriate.
   //
   // Method result dictionaries include an "id" (int) value that identifies the
-  // orginating method call sent from CefBrowserHost::SendDevToolsMessage, and
+  // originating method call sent from CefBrowserHost::SendDevToolsMessage, and
   // optionally either a "result" (dictionary) or "error" (dictionary) value.
   // The "error" dictionary will contain "code" (int) and "message" (string)
   // values. Event dictionaries include a "method" (string) value and optionally
